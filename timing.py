@@ -1,45 +1,59 @@
+import random
+import numpy as np
+import gc
+import time
+
+datasize = 1_000
+nfind = 100
+
+
 class CustomerRecord:
- 6  def __init__(self, myid):
- 7    self.myid = myid
- 8    self.somedata = random.randint(0,999999)
- 9    self.otherdata = random.randint(0,999999)
-10    pass
-11  pass
+    def __init__(self, myid):
+        self.myid = myid
+        self.somedata = random.randint(0, 999999)
+        self.otherdata = random.randint(0, 999999)
+
+    pass
+
+
+pass
 
 
 mydict = {}
-17  myvals = [ CustomerRecord(n) for n in range(0,datasize)]
-18  for v in myvals:
-19    mydict[v.myid] = v
-20    pass
-21  nparr = np.array(myvals)
-22  myvals= []
-23  random.shuffle(myvals)
-24  #what random ids we are looking for                         
-25  find = { random.randrange(datasize) for i in range(0, nfind)}
-26  np_time_total = 0
-27  dict_time_total = 0
+myvals = [CustomerRecord(n) for n in range(0, datasize)]
+for v in myvals:
+    mydict[v.myid] = v
+pass
 
-#we’re going to setup our boolean yes/no array first...               
-29  yn=[nparr[i] in find for i in range(0, datasize)]
-30  np_filter = np.array(yn)
+nparr = np.array(myvals)
+myvals = []
+random.shuffle(myvals)
+
+# what random ids we are looking for
+find = {random.randrange(datasize) for i in range(0, nfind)}
+np_time_total = 0
+dict_time_total = 0
+
+# we’re going to setup our boolean yes/no array first...
+yn = [nparr[i] in find for i in range(0, datasize)]
+np_filter = np.array(yn)
 
 for i in range(ntries):
-34    gc.collect()
-35    #clear l3 cache out                               
-36    l3cache[l3cache ==0]
-37    start = time.perf_counter()
-38    nparr[np_filter]
-39    end = time.perf_counter()
-40    np_time_total += end - start
-41    gc.collect()
-42    #clear l3 cache out                               
-43    l3cache[l3cache ==0]
-44    start = time.perf_counter()
-45    temp = set([])
-46    for k in find:
-47      temp.add(mydict[k])
-48      pass
-49    end = time.perf_counter()
-50    dict_time_total += end - start
-51    pass
+    gc.collect()
+    # clear l3 cache out
+    l3cache[l3cache == 0]
+    start = time.perf_counter()
+    nparr[np_filter]
+    end = time.perf_counter()
+    np_time_total += end - start
+    gc.collect()
+    # clear l3 cache out
+    l3cache[l3cache == 0]
+    start = time.perf_counter()
+    temp = set([])
+    for k in find:
+        temp.add(mydict[k])
+        pass
+    end = time.perf_counter()
+    dict_time_total += end - start
+    pass
